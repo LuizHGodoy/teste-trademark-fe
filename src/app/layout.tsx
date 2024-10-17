@@ -1,7 +1,6 @@
-import { ThemeProvider } from "@/components/theme-provider";
+import { Wrapper } from "@/components/wrapper";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./globals.css";
 
@@ -35,13 +34,10 @@ export default function RootLayout({
         />
         <meta name="apple-mobile-web-app-title" content="MyWebSite" />
         <link rel="manifest" href="/site.webmanifest" />
-        <body className={inter.className}>
-          <ThemeProvider defaultTheme="system" storageKey="app-theme">
-            {children}
-            <ToastContainer />
-          </ThemeProvider>
-        </body>
       </head>
+      <body className={inter.className}>
+        <Wrapper>{children}</Wrapper>
+      </body>
     </html>
   );
 }
