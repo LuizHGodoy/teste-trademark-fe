@@ -1,4 +1,5 @@
 import { getCurrentUser, signIn, signUp } from "@/services/api/sign-in";
+import { useRouter } from "next/navigation";
 import React, {
   createContext,
   ReactNode,
@@ -21,14 +22,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<any>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    !!localStorage.getItem("token"),
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
-    if (storedUser) {
+    if (token && storedUser) {
+      setIsAuthenticated(true);
       setUser(JSON.parse(storedUser));
+    } else {
+      setIsAuthenticated(false);
+      setUser(null);
     }
   }, []);
 
@@ -61,7 +66,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("user"); // Remover o usuário do localStorage ao sair
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    router.push("/sign-in");
   };
 
   return (
