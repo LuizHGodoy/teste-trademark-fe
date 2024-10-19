@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Visão Geral
 
-## Getting Started
+Este projeto é um Gerenciador de Tarefas desenvolvido com React e Next.js. Ele permite que os usuários criem, editem, excluam e organizem tarefas num formato de lista e Kanban. O projeto utiliza várias bibliotecas para facilitar a construção da interface e a gestão do estado.
 
-First, run the development server:
+# Tecnologias Utilizadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js: Utilizado para criar a interface do usuário e gerenciar o estado.
+- Axios: Biblioteca para fazer requisições HTTP.
+- Dnd Kit: Biblioteca para implementar arrastar e soltar (drag and drop).
+- Tailwind CSS: Utilizado para estilizar a interface do usuário.
+- Radix UI: Utilizado para criar componentes de interface do usuário.
+- React Toastify: Utilizado para exibir notificações de sucesso e erro.
+
+# Estrutura de Arquivos
+
+A estrutura de arquivos do projeto segue a seguinte estrutura:
+
+```
+/src
+  /app
+    /layout.tsx
+    /page.tsx
+    /sign-in
+      /page.tsx
+    /sign-up
+      /page.tsx
+  /components
+    /create-task.tsx
+    /delete-task-dialog.tsx
+    /footer.tsx
+    /header.tsx
+    /kanban-view.tsx
+    /kanban-column.tsx
+    /kanban-task.tsx
+    /priority-select.tsx
+    /task-list.tsx
+    /ui
+      /button.tsx
+      /checkbox.tsx
+      /dialog.tsx
+      /input.tsx
+      /popover.tsx
+      /select.tsx
+      /textarea.tsx
+  /context
+    /auth-context.tsx
+  /services
+    /api
+      /tasks.ts
+      /sign-in.ts
+    /index.ts
+  /common
+    /exceptions
+      /api-error.ts
+  /lib
+    /utils.ts
+  /styles
+    /globals.css
+/package.json
+/.env.local
+/.env.local.example
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# Configuração do Ambiente
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Para configurar o ambiente, siga os seguintes passos:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Clone o repositório:
 
-## Learn More
+```bash
+  git clone https://github.com/LuizHGodoy/teste-trademark-fe.git
+  cd teste-trademark-fe
+```
 
-To learn more about Next.js, take a look at the following resources:
+2. Instale as dependências:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+  pnpm install
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Configure as variáveis de ambiente:
 
-## Deploy on Vercel
+- Renomeie o arquivo .env.local.example para .env.local.
+- Defina a variável NEXT_PUBLIC_API_URL com a URL da sua API. 
+  Por exemplo:
+  ```
+       NEXT_PUBLIC_API_URL=http://localhost:3434
+  ```
+4. Inicie o servidor de desenvolvimento: 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+   pnpm dev
+```
+5. Acesse a aplicação: 
+Abra seu navegador e vá para http://localhost:3000 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Licença
+
+This project is not licensed for public use. All rights reserved.
+
