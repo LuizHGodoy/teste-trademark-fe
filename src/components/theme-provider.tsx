@@ -22,36 +22,42 @@ const initialState: ThemeProviderState = {
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
+function getInitialTheme(storageKey: string, defaultTheme: Theme): Theme {
+  if (typeof window !== "undefined") {
+    const storedTheme = localStorage.getItem(storageKey) as Theme | null;
+    if (storedTheme) {
+      return storedTheme;
+    }
+    if (defaultTheme === "system") {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+  }
+  return defaultTheme;
+}
+
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "theme",
+  storageKey = "app-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [theme, setTheme] = useState<Theme>(() =>
+    getInitialTheme(storageKey, defaultTheme),
+  );
 
   useEffect(() => {
     const root = window.document.documentElement;
-    const storedTheme = localStorage.getItem(storageKey) as Theme | null;
-
-    if (storedTheme) {
-      setTheme(storedTheme);
-    }
-
     root.classList.remove("light", "dark");
-
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-
-      root.classList.add(systemTheme);
-      return;
-    }
-
-    root.classList.add(theme);
-  }, [theme, storageKey]);
+    root.classList.add(
+      theme === "system"
+        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+        : theme,
+    );
+  }, [theme]);
 
   const value = {
     theme,

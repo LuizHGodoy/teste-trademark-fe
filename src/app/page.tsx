@@ -2,9 +2,10 @@
 
 import { CreateTask, defaultTask } from "@/components/create-task";
 import { DeleteTaskDialog } from "@/components/delete-task-dialog";
+import { Footer } from "@/components/footer";
+import { Header } from "@/components/header";
 import { KanbanView } from "@/components/kanban-view";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { TaskList } from "@/components/task-list";
 import { useAuth } from "@/context/auth-context";
 import {
   CreateTaskPayload,
@@ -12,22 +13,11 @@ import {
   getAllTasks,
   updateTask,
 } from "@/services/api/tasks";
-import {
-  DashboardIcon,
-  DotsVerticalIcon,
-  ExitIcon,
-  HamburgerMenuIcon,
-  PlusIcon,
-} from "@radix-ui/react-icons";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../components/ui/dropdown-menu";
+
+const LoadingComponent = () => <div>Carregando...</div>;
 
 export default function TaskManager() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,9 +32,25 @@ export default function TaskManager() {
     null,
   );
   const [isKanbanView, setIsKanbanView] = useState(false);
+  const { isAuthenticated, isLoading, user, logout } = useAuth();
   const router = useRouter();
 
-  const { isAuthenticated, user, logout } = useAuth();
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push("/sign-in");
+    }
+  }, [isLoading, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getTasks();
+    }
+  }, [isAuthenticated]);
+
+  const getTasks = async () => {
+    const fetchedTasks = await getAllTasks();
+    setTasks(fetchedTasks);
+  };
 
   const addTask = () => {
     setCurrentTask(defaultTask);
@@ -66,11 +72,6 @@ export default function TaskManager() {
     getTasks();
     setEditingTask(null);
     setCurrentTask(defaultTask);
-  };
-
-  const getTasks = async () => {
-    const tasks = await getAllTasks();
-    setTasks(tasks);
   };
 
   const openDeleteDialog = (task: CreateTaskPayload) => {
@@ -97,7 +98,6 @@ export default function TaskManager() {
       toast.success("Tarefa excluída com sucesso!");
     } catch (error) {
       console.error("Erro ao excluir tarefa:", error);
-      toast.error("Erro ao excluir tarefa. Por favor, tente novamente.");
     }
   };
 
@@ -121,22 +121,6 @@ export default function TaskManager() {
     }
   };
 
-  const getCurrentDate = () => {
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    };
-    return new Date().toLocaleDateString("pt-BR", options);
-  };
-
-  useEffect(() => {
-    if (!isAuthenticated) redirect("/sign-in");
-
-    getTasks();
-  }, []);
-
   const toggleView = () => {
     setIsKanbanView(!isKanbanView);
   };
@@ -158,46 +142,28 @@ export default function TaskManager() {
     [tasks],
   );
 
-  const handleTaskEdit = useCallback((task: CreateTaskPayload) => {
-    setCurrentTask(task);
-    setEditingTask(task);
-    setIsModalOpen(true);
-  }, []);
-
   const handleLogout = () => {
     logout();
   };
 
+  if (isLoading) {
+    return <LoadingComponent />;
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col min-h-screen w-full max-w-[1400px] bg-background text-foreground m-auto">
       <div className="flex-grow">
-        <div className="flex items-center justify-between mt-16">
-          <div className="">
-            <h1 className="text-2xl font-bold">Gerenciador de Tarefas</h1>
-            {user && <h2 className="text-lg">Bem-vindo, {user.name}! 👋</h2>}
-            <p className="text-gray-600">{getCurrentDate()}</p>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <div className="flex space-x-4 ">
-              <Button
-                variant={"secondary"}
-                className="rounded-full gap-2"
-                onClick={addTask}
-              >
-                <PlusIcon />
-                Adicionar nova tarefa
-              </Button>
-              <Button variant={"secondary"} onClick={toggleView}>
-                {isKanbanView ? <HamburgerMenuIcon /> : <DashboardIcon />}
-              </Button>
-            </div>
-            <Button variant={"ghost"} className="gap-2" onClick={handleLogout}>
-              <ExitIcon />
-              Sair
-            </Button>
-          </div>
-        </div>
+        <Header
+          userName={user?.name || ""}
+          isKanbanView={isKanbanView}
+          onAddTask={addTask}
+          onToggleView={toggleView}
+          onLogout={handleLogout}
+        />
 
         {isKanbanView ? (
           <KanbanView
@@ -209,54 +175,13 @@ export default function TaskManager() {
           />
         ) : (
           <div className="max-w-[900px] mt-16 m-auto">
-            {tasks.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-xl">Ainda não há tarefas criadas 😢</p>
-                <Button variant="outline" className="mt-4" onClick={addTask}>
-                  Criar primeira tarefa
-                </Button>
-              </div>
-            ) : (
-              <ul className="space-y-2">
-                {tasks.map((task) => (
-                  <li
-                    key={task.uuid}
-                    className="flex items-center justify-between p-4 border rounded-lg border-border bg-card hover:border-gray-500 hover:cursor-pointer"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <Checkbox
-                        checked={task.completed}
-                        onCheckedChange={() =>
-                          toggleComplete(task.uuid, task.completed)
-                        }
-                      />
-                      <span
-                        className={`${task.completed ? "line-through text-muted-foreground" : "text-foreground"}`}
-                      >
-                        {task.title}
-                      </span>
-                    </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <DotsVerticalIcon />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => openEditModal(task)}>
-                          Editar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => openDeleteDialog(task)}
-                        >
-                          Excluir
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <TaskList
+              tasks={tasks}
+              onToggleComplete={toggleComplete}
+              onEditTask={openEditModal}
+              onDeleteTask={openDeleteDialog}
+              onAddTask={addTask}
+            />
           </div>
         )}
 
@@ -280,13 +205,7 @@ export default function TaskManager() {
         />
       </div>
 
-      <footer className="mt-auto ">
-        <div className="max-w-[900px] mx-auto text-center">
-          <p className="text-muted-foreground">
-            Desenvolvido com 💖 e ☕ por Luiz Godoy
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

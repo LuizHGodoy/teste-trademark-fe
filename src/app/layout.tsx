@@ -34,6 +34,24 @@ export default function RootLayout({
         />
         <meta name="apple-mobile-web-app-title" content="MyWebSite" />
         <link rel="manifest" href="/site.webmanifest" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+            (function() {
+              function getInitialTheme() {
+                const storedTheme = localStorage.getItem('app-theme');
+                if (storedTheme) {
+                  return storedTheme;
+                }
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+              }
+              
+              const theme = getInitialTheme();
+              document.documentElement.classList.add(theme);
+            })();
+          `,
+          }}
+        />
       </head>
       <body className={inter.className}>
         <Wrapper>{children}</Wrapper>

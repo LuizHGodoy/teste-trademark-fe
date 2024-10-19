@@ -11,6 +11,7 @@ import React, {
 interface AuthContextType {
   user: any;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (userData: any) => Promise<void>;
   create: (userData: any) => Promise<void>;
   logout: () => void;
@@ -23,18 +24,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<any>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    if (token && storedUser) {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(storedUser));
-    } else {
-      setIsAuthenticated(false);
-      setUser(null);
-    }
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+      if (token && storedUser) {
+        setIsAuthenticated(true);
+        setUser(JSON.parse(storedUser));
+      } else {
+        setIsAuthenticated(false);
+        setUser(null);
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
   }, []);
 
   const login = async (userData: any) => {
@@ -73,7 +80,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, login, create, logout }}
+      value={{ user, isAuthenticated, isLoading, login, create, logout }}
     >
       {children}
     </AuthContext.Provider>
