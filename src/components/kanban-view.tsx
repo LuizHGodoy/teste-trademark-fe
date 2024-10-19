@@ -70,8 +70,7 @@ export function KanbanView({
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    console.log("Active:", active);
-    console.log("Over:", over);
+
     if (over && active.id !== over.id) {
       const activeTask = tasks.find((t) => t.uuid === active.id);
       if (!activeTask) return;

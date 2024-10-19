@@ -25,7 +25,6 @@ export function KanbanTask({ task, onEdit }: KanbanTaskProps) {
 
   useEffect(() => {
     if (isDoubleClick) {
-      console.log("Double click");
       onEdit(task);
     }
   }, [isDoubleClick, task, onEdit]);
