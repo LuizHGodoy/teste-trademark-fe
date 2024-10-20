@@ -40,8 +40,8 @@ export default function SignUp() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 w-full max-w-[450px] min-h-screen mx-auto">
-      <p className="mb-10 font-bold text-2xl text-center">
+    <div className="flex flex-col items-center justify-center p-4 sm:p-6 w-full max-w-[350px] sm:max-w-[450px] min-h-screen mx-auto">
+      <p className="mb-6 sm:mb-10 font-bold text-xl sm:text-2xl text-center">
         &#128198; Task Manager
       </p>
       <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
@@ -74,7 +74,7 @@ export default function SignUp() {
         />
 
         <Button className="mt-4">Criar conta</Button>
-        <p className="mt-4 text-center">
+        <p className="mt-4 text-center text-sm sm:text-base">
           Já tem uma conta?{" "}
           <Link href="/sign-in" className="text-blue-500 hover:underline">
             Faça login

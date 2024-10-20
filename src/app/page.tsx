@@ -35,18 +35,6 @@ export default function TaskManager() {
   const { isAuthenticated, isLoading, user, logout } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push("/sign-in");
-    }
-  }, [isLoading, isAuthenticated, router]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      getTasks();
-    }
-  }, [isAuthenticated]);
-
   const getTasks = async () => {
     const fetchedTasks = await getAllTasks();
     setTasks(fetchedTasks);
@@ -146,6 +134,18 @@ export default function TaskManager() {
     logout();
   };
 
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      router.push("/sign-in");
+    }
+  }, [isLoading, isAuthenticated, router]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getTasks();
+    }
+  }, [isAuthenticated]);
+
   if (isLoading) {
     return <LoadingComponent />;
   }
@@ -155,7 +155,7 @@ export default function TaskManager() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen w-full max-w-[1400px] bg-background text-foreground m-auto">
+    <div className="flex flex-col min-h-screen w-full max-w-[1400px] bg-background text-foreground m-auto px-4 sm:px-6 lg:px-8">
       <div className="flex-grow">
         <Header
           userName={user?.name || ""}
@@ -166,15 +166,17 @@ export default function TaskManager() {
         />
 
         {isKanbanView ? (
-          <KanbanView
-            tasks={tasks}
-            onTaskUpdate={handleTaskUpdate}
-            onTaskDelete={handleDeleteTask}
-            openEditModal={openEditModal}
-            openDeleteDialog={openDeleteDialog}
-          />
+          <div className="mt-8 overflow-x-auto">
+            <KanbanView
+              tasks={tasks}
+              onTaskUpdate={handleTaskUpdate}
+              onTaskDelete={handleDeleteTask}
+              openEditModal={openEditModal}
+              openDeleteDialog={openDeleteDialog}
+            />
+          </div>
         ) : (
-          <div className="max-w-[900px] mt-16 m-auto">
+          <div className="max-w-[900px] mt-8 sm:mt-16 mx-auto">
             <TaskList
               tasks={tasks}
               onToggleComplete={toggleComplete}

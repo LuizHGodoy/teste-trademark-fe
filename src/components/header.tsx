@@ -32,31 +32,37 @@ export function Header({
   };
 
   return (
-    <div className="flex items-center justify-between mt-16">
-      <div className="">
-        <h1 className="text-2xl font-bold">Gerenciador de Tarefas</h1>
-        <h2 className="text-lg">Bem-vindo, {userName}! 👋</h2>
-        <p className="text-gray-600">{getCurrentDate()}</p>
+    <div className="flex flex-col space-y-4 mt-4 px-4 sm:px-0">
+      <div className="flex justify-between items-center">
+        <h1 className="text-lg sm:text-xl font-bold">Gerenciador de Tarefas</h1>
+        <Button variant="ghost" size="sm" onClick={onLogout}>
+          <ExitIcon className="mr-2" />
+          <span className="hidden sm:inline">Sair</span>
+        </Button>
       </div>
 
-      <div className="flex items-center space-x-4">
-        <div className="flex space-x-4 ">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <div>
+          <h2 className="text-sm sm:text-base">Bem-vindo, {userName}! 👋</h2>
+          <p className="text-xs sm:text-sm text-gray-600">{getCurrentDate()}</p>
+        </div>
+
+        <div className="flex mt-2 sm:mt-0 space-x-2 w-full sm:w-auto">
           <Button
-            variant={"secondary"}
-            className="rounded-full gap-2"
+            variant="secondary"
+            size="sm"
+            className="flex-grow sm:flex-grow-0"
             onClick={onAddTask}
           >
-            <PlusIcon />
-            Adicionar nova tarefa
+            <PlusIcon className="mr-1" />
+            <span className="text-xs sm:text-sm">Nova tarefa</span>
           </Button>
-          <Button variant={"secondary"} onClick={onToggleView}>
-            {isKanbanView ? <HamburgerMenuIcon /> : <DashboardIcon />}
-          </Button>
+          <div className="hidden md:block">
+            <Button variant="secondary" size="sm" onClick={onToggleView}>
+              {isKanbanView ? <HamburgerMenuIcon /> : <DashboardIcon />}
+            </Button>
+          </div>
         </div>
-        <Button variant={"ghost"} className="gap-2" onClick={onLogout}>
-          <ExitIcon />
-          Sair
-        </Button>
       </div>
     </div>
   );
