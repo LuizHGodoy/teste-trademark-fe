@@ -40,8 +40,8 @@ export function KanbanView({
       return tasks.filter((task) => {
         if (status === "Done") return task.completed;
         if (status === "In Progress")
-          return !task.completed && task.priority === "high";
-        return !task.completed && task.priority !== "high";
+          return !task.completed && task.priority === "Alta";
+        return !task.completed && task.priority !== "Alta";
       });
     },
     [tasks],
@@ -82,13 +82,13 @@ export function KanbanView({
 
         if (over.id === "Done") {
           updatedTask.completed = true;
-          updatedTask.priority = "low";
+          updatedTask.priority = "Baixa";
         } else if (over.id === "In Progress") {
           updatedTask.completed = false;
-          updatedTask.priority = "high";
+          updatedTask.priority = "Alta";
         } else if (over.id === "ToDo") {
           updatedTask.completed = false;
-          updatedTask.priority = "low";
+          updatedTask.priority = "Baixa";
         }
 
         onTaskUpdate(updatedTask);

@@ -39,6 +39,7 @@ export function TaskList({
     <ul className="space-y-2">
       {tasks.map((task) => (
         <li
+          onDoubleClick={() => onEditTask(task)}
           key={task.uuid}
           className="flex items-center justify-between p-4 border rounded-lg border-border bg-card hover:border-gray-500 hover:cursor-pointer"
         >
@@ -53,6 +54,13 @@ export function TaskList({
               className={`${task.completed ? "line-through text-muted-foreground" : "text-foreground"}`}
             >
               {task.title}
+            </span>
+            <span>
+              {task.priority === "Baixa" && "🔥"}
+              {task.priority === "Média" && "🔥🔥"}
+              {task.priority === "Alta" && "🔥🔥🔥"}
+              {task.priority === "Urgente" && "🔥🔥🔥🔥"}
+              {task.priority === "Chefe chegou com duas pizzas" && "🔥🔥🔥🔥🔥"}
             </span>
           </div>
           <DropdownMenu>

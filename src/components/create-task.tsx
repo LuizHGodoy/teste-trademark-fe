@@ -24,7 +24,7 @@ interface ModalProps {
 export const defaultTask: CreateTaskPayload = {
   title: "",
   description: "",
-  priority: "low",
+  priority: "Baixa",
 };
 
 export function CreateTask({

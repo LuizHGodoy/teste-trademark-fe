@@ -6,11 +6,11 @@ import { Button } from "./ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 const priorities = [
-  { value: "baixa", label: "Baixa" },
-  { value: "média", label: "Média" },
-  { value: "alta", label: "Alta" },
-  { value: "urgente", label: "Urgente" },
-  { value: "chefe chegou com duas pizzas", label: "Chefe com pizzas" },
+  { value: "Baixa", label: "Baixa" },
+  { value: "Média", label: "Média" },
+  { value: "Alta", label: "Alta" },
+  { value: "Urgente", label: "Urgente" },
+  { value: "Chefe chegou com duas pizzas", label: "Chefe com pizzas" },
 ];
 
 interface PrioritySelectProps {
@@ -25,7 +25,7 @@ export function PrioritySelect({
   const [open, setOpen] = React.useState(false);
 
   const handleSelect = (priority: string) => {
-    onPriorityChange(priority); // Chama a função passada como prop
+    onPriorityChange(priority);
     setOpen(false);
   };
 
